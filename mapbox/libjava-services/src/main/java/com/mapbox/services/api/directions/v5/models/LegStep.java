@@ -26,6 +26,7 @@ public class LegStep {
   private StepManeuver maneuver;
   private double weight;
   private List<StepIntersection> intersections;
+  private List<Voice> voice;
 
   /**
    * Empty constructor
@@ -324,5 +325,13 @@ public class LegStep {
    */
   public void setPronunciation(String pronunciation) {
     this.pronunciation = pronunciation;
+  }
+
+  public List<Voice> getVoice() {
+    return voice;
+  }
+
+  public void setVoice(List<Voice> voice) {
+    this.voice = voice;
   }
 }

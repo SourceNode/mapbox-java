@@ -52,10 +52,10 @@ public class DirectionsV5Activity extends AppCompatActivity {
     setContentView(R.layout.activity_directions_v5);
 
     // San Francisco
-    final Position origin = Position.fromCoordinates(-122.416667, 37.783333);
+    final Position origin = Position.fromCoordinates(-77.04330, 38.90962);
 
     // San Jose
-    final Position destination = Position.fromCoordinates(-121.9, 37.333333);
+    final Position destination = Position.fromCoordinates(-77.00908, 38.88974);
 
     // Centroid
     final LatLng centroid = new LatLng(
@@ -102,33 +102,38 @@ public class DirectionsV5Activity extends AppCompatActivity {
     positions.add(destination);
 
     MapboxDirections client = new MapboxDirections.Builder()
-      .setAccessToken(Utils.getMapboxAccessToken(this))
+      .setAccessToken("pk.eyJ1IjoiZnJlZW5lcmQ5IiwiYSI6ImNpcHBjbWd2bDAwMG9kZmtzMmU5MXhmNHkifQ._1rzNzfq83Nx-h2IYiu0WQ")
       .setCoordinates(positions)
       .setProfile(DirectionsCriteria.PROFILE_DRIVING)
       .setSteps(true)
+      .setBaseUrl("https://api-directions-voyage-internal.tilestream.net")
       .setOverview(DirectionsCriteria.OVERVIEW_FULL)
-      .setBearings(new double[] {60, 45}, new double[] {45, 45})
-      .setAnnotation(DirectionsCriteria.ANNOTATION_DISTANCE, DirectionsCriteria.ANNOTATION_DURATION)
+//      .setBearings(new double[] {60, 45}, new double[] {45, 45})
+//      .setAnnotation(DirectionsCriteria.ANNOTATION_DISTANCE, DirectionsCriteria.ANNOTATION_DURATION)
       .build();
 
-    MapboxDirectionsRx clientRx = new MapboxDirectionsRx.Builder()
-      .setAccessToken(Utils.getMapboxAccessToken(this))
-      .setCoordinates(positions)
-      .setProfile(DirectionsCriteria.PROFILE_DRIVING)
-      .setSteps(true)
-      .setOverview(DirectionsCriteria.OVERVIEW_FULL)
-      .build();
-    clientRx.getObservable()
-      .subscribeOn(Schedulers.newThread())
-      .observeOn(AndroidSchedulers.mainThread())
-      .subscribe(new Consumer<DirectionsResponse>() {
-        @Override
-        public void accept(DirectionsResponse response) throws Exception {
-          DirectionsRoute currentRoute = response.getRoutes().get(0);
-          Log.d(LOG_TAG, "Response code: " + response.getCode());
-          Log.d(LOG_TAG, "Distance: " + currentRoute.getDistance());
-        }
-      });
+
+
+//    MapboxDirectionsRx clientRx = new MapboxDirectionsRx.Builder()
+//      .setAccessToken(Utils.getMapboxAccessToken(this))
+//      .setCoordinates(positions)
+//      .setProfile(DirectionsCriteria.PROFILE_DRIVING)
+//      .setSteps(true)
+//      .setOverview(DirectionsCriteria.OVERVIEW_FULL)
+//      .build();
+//    clientRx.getObservable()
+//      .subscribeOn(Schedulers.newThread())
+//      .observeOn(AndroidSchedulers.mainThread())
+//      .subscribe(new Consumer<DirectionsResponse>() {
+//        @Override
+//        public void accept(DirectionsResponse response) throws Exception {
+//          DirectionsRoute currentRoute = response.getRoutes().get(0);
+//          Log.d(LOG_TAG, "Response code: " + response.getCode());
+//          Log.d(LOG_TAG, "Distance: " + currentRoute.getDistance());
+//        }
+//      });
+
+    System.out.println(client.cloneCall().request().url());
 
     client.enqueueCall(new Callback<DirectionsResponse>() {
       @Override
@@ -144,6 +149,8 @@ public class DirectionsV5Activity extends AppCompatActivity {
 
         // Print some info about the route
         currentRoute = response.body().getRoutes().get(0);
+        System.out.println(currentRoute.getLegs().get(0).getSteps().get(0).getVoice().get(0).getAnnounceDistance());
+
         Log.d(LOG_TAG, "Distance: " + currentRoute.getDistance());
         showMessage(String.format(Locale.US, "Route is %.1f meters long.", currentRoute.getDistance()));
 
