@@ -1,6 +1,18 @@
 apply plugin: 'checkstyle'
+apply plugin: 'pmd'
 
 checkstyle {
+  configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+  configProperties = [
+      'configDir': rootProject.file('config/checkstyle'),
+      'baseDir': rootDir,
+  ]
   toolVersion = pluginVersion.checkstyle
   showViolations = true
+}
+
+pmd {
+//  ruleSets = []
+//  toolVersion = version.pmd
+//  ruleSetConfig = resources.text.fromFile(file("${rootDir}/config/pmd/rulesSets.xml"))
 }
