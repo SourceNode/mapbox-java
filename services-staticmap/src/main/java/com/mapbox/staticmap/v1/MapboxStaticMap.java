@@ -1,7 +1,20 @@
 package com.mapbox.staticmap.v1;
 
+import android.support.annotation.FloatRange;
+import android.support.annotation.IntRange;
+import android.support.annotation.IntegerRes;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.google.auto.value.AutoValue;
+import com.mapbox.geojson.GeoJson;
+import com.mapbox.geojson.Point;
 import com.mapbox.services.Constants;
-import java.util.ArrayList;x
+import com.mapbox.services.exceptions.ServicesException;
+import com.mapbox.staticmap.v1.models.StaticMarkerAnnotation;
+import com.mapbox.staticmap.v1.models.StaticPolylineAnnotation;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -13,13 +26,14 @@ import okhttp3.HttpUrl;
  * or controls. the returned image can be a raster tile ans pulls from any map style in the Mapbox
  * Style Specification.
  * <p>
- * This class helos make a valid request and gets the information correctly formatted for Picaso or
+ * This class helps make a valid request and gets the information correctly formatted for Picaso or
  * Glide libraries which help download the image and place it into an Image View.
  *
- * @see <a href=https://www.mapbox.com/developers/api/styles/#Request.static.images.from.a.style>API Documentation</a>
+ * @see <a href=https://www.mapbox.com/api-documentation/#static>API Documentation</a>
  * @since 1.0.0
  */
-public class MapboxStaticMap {
+@AutoValue
+public abstract class MapboxStaticMap {
 
   private HttpUrl url;
 
@@ -78,222 +92,176 @@ public class MapboxStaticMap {
     return url;
   }
 
+
+  /**
+   * Build a new {@link MapboxStaticMap} object with the initial values set for
+   * {@link #baseUrl()}, {@link #profile()}, {@link #user()}, and {@link #geometries()}.
+   *
+   * @return a {@link Builder} object for creating this object
+   * @since 3.0.0
+   */
+  public static Builder builder() {
+    return new AutoValue_MapboxDirections.Builder()
+      .baseUrl(Constants.BASE_API_URL)
+      .profile(DirectionsCriteria.PROFILE_DRIVING)
+      .user(DirectionsCriteria.PROFILE_DEFAULT_USER)
+      .geometries(DirectionsCriteria.GEOMETRY_POLYLINE6)
+      .retina(false);
+  }
+
   /**
    * Static image builder used to customize the image, including location, image width/height,
    * and camera position.
    *
    * @since 1.0.0
    */
-  public static class Builder extends MapboxBuilder {
-
-    // Set defaults for optional fields
-    private String accessToken;
-    private String username = Constants.MAPBOX_USER;
-    private String styleId;
-    private Double lon;
-    private Double lat;
-    private Double zoom;
-    private double bearing = 0;
-    private double pitch = 0;
-    private boolean auto;
-    private String beforeLayer;
-    private Integer width;
-    private Integer height;
-    private boolean retina = false;
-    private boolean attribution = true;
-    private boolean logo = true;
-    private StaticMarkerAnnotation[] staticMarkerAnnotations;
-    private StaticPolylineAnnotation[] staticPolylineAnnotations;
-    private String geoJson;
-
-    // This field isn't part of the URL
-    private int precision = -1;
+  @AutoValue.Builder
+  public abstract static class Builder {
 
     /**
-     * If a {@link GeoJson} object was provided, you can get the formatted version of it by calling this method.
+     * Required to call when this is being built. If no access token provided,
+     * {@link ServicesException} will be thrown.
      *
-     * @return a formatted string ready to be added to the static image URL.
+     * @param accessToken Mapbox access token, You must have a Mapbox account inorder to use
+     *                    the Optimization API
+     * @return this builder for chaining options together
+     * @since 1.0.0
+     */
+    public abstract Builder accessToken(@NonNull String accessToken);
+
+    /**
+     * Optionally change the APIs base URL to something other then the default Mapbox one.
+     *
+     * @param baseUrl base url used as end point
+     * @return this builder for chaining options together
      * @since 2.1.0
      */
-    public String getGeoJson() {
-      return geoJson;
-    }
+    public abstract Builder baseUrl(@NonNull String baseUrl);
 
     /**
-     * Pass in a {@link GeoJson} object which contains geometry where you'd like your annotations to be placed.
+     * The username for the account that the directions engine runs on. In most cases, this should
+     * always remain the default value of {@link Constants#MAPBOX_USER}.
      *
-     * @param geoJson a single {@link GeoJson} object which includes at least one annotation.
-     * @return This Static image builder.
-     * @since 2.1.0
-     */
-    public Builder setGeoJson(GeoJson geoJson) {
-      this.geoJson = String.format(Constants.DEFAULT_LOCALE, "geojson(%s)", geoJson.toJson());
-      return this;
-    }
-
-    /**
-     * Required to call when building {@link com.mapbox.services.api.staticimage.v1.MapboxStaticImage.Builder}.
-     *
-     * @param accessToken Mapbox access token, you must have a Mapbox account in order to use
-     *                    this library.
-     * @return Builder
+     * @param user a non-null string which will replace the default user used in the directions
+     *             request
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    @Override
-    public Builder setAccessToken(String accessToken) {
-      this.accessToken = accessToken;
-      return this;
-    }
+    public abstract Builder user(@NonNull String user);
 
     /**
-     * Set the map style username. Typically will either be your Mapbox username or if you are
-     * using one of the <a href=https://mapbox.com/api-documentation/#styles>defaults</a> Mapbox
-     * styles, the username will be "mapbox".
+     * The returning map images style, which can be one of the provided Mapbox Styles or a custom
+     * style made inside Mapbox Studio. Passing null will revert to using the default map Street
+     * style.
      *
-     * @param username You will need to pass in your Mapbox username.
-     * @return Builder
+     * @param styleId either one of the styles defined inside {@link StaticMapCriteria} or a custom
+     *                url pointing to a styled map made in Mapbox Studio
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setUsername(String username) {
-      this.username = username;
-      return this;
-    }
+    public abstract Builder styleId(@Nullable String styleId);
 
     /**
-     * You'll need to set what map style you'd like the static image to display.
+     * Optionally, control whether there is a Mapbox logo on the image. Default is true. Check that
+     * the current Mapbox plan you are under allows for hiding the Mapbox Logo from the mao.
      *
-     * @param styleId can be one of the <a href=https://mapbox.com/api-documentation/#styles>defaults</a> or your own.
-     * @return Builder
+     * @param logo true places Mapbox logo on image
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setStyleId(String styleId) {
-      this.styleId = styleId;
-      return this;
-    }
+    public abstract Builder logo(@Nullable Boolean logo);
 
     /**
-     * Longitude for the center point of the static map.
+     * Optionally, control whether there is attribution on the image. Default is true. Check that
+     * the current Mapbox plan you are under allows for hiding the Mapbox Logo from the mao.
      *
-     * @param lon double number between -180 and 180.
-     * @return Builder
+     * @param attribution true places attribution on image
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setLon(double lon) {
-      this.lon = lon;
-      return this;
-    }
+    public abstract Builder attribution(@Nullable Boolean attribution);
 
     /**
-     * Latitude for the center point of the static map.
+     * Enhance your image by toggling retina to true. This will double the amount of pixels the
+     * returning image will have.
      *
-     * @param lat double number between -90 and 90.
-     * @return Builder
+     * @param retina true if the desired image being returned should contain double pixels
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setLat(double lat) {
-      this.lat = lat;
-      return this;
-    }
+    public abstract Builder retina(@Nullable Boolean retina);
 
     /**
-     * Location for the center point of the static map.
+     * Center point where the camera will be focused on.
      *
-     * @param position Position object with valid latitude and longitude values
-     * @return Builder
-     * @since 1.2.0
-     * @deprecated Use {@link MapboxStaticMap.Builder#setPosition(Position)} instead.
-     */
-    @Deprecated
-    public Builder setLocation(Position position) {
-      this.lat = position.getLatitude();
-      this.lon = position.getLongitude();
-      return this;
-    }
-
-    /**
-     * Location for the center point of the static map.
-     *
-     * @param position Position object with valid latitude and longitude values
-     * @return Builder
-     * @since 2.1.0
-     */
-    public Builder setPosition(Position position) {
-      this.lat = position.getLatitude();
-      this.lon = position.getLongitude();
-      return this;
-    }
-
-    /**
-     * static map zoom level. Fractional zoom levels will be rounded to two decimal places.
-     *
-     * @param zoom double number between 0 and 22.
-     * @return Builder
+     * @param cameraPoint a GeoJSON Point object which defines the cameras center position
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setZoom(double zoom) {
-      this.zoom = zoom;
-      return this;
-    }
+    public abstract Builder cameraPoint(@Nullable Point cameraPoint);
 
     /**
-     * Optionally, bearing rotates the map around its center. A value of 90 rotates the map 90
-     * to the left. 180 flips the map. Defaults is 0.
+     * Static maps camera zoom level. This can be though of as how far away the camera is from the
+     * subject (earth) thus a zoom of 0 will display the entire world vs zoom 16 which is street\
+     * level zoom level. Fractional zoom levels will be rounded to two decimal places.
      *
-     * @param bearing double number between 0 and 360, interpreted as decimal degrees.
-     * @return Builder
+     * @param cameraZoom double number between 0 and 22
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setBearing(double bearing) {
-      this.bearing = bearing;
-      return this;
-    }
+    public abstract Builder cameraZoom(@FloatRange(from = 0, to = 22) @Nullable Double cameraZoom);
+
+    /**
+     * Optionally, bearing rotates the map around its center defined point given in
+     * {@link #cameraPoint(Point)}. A value of 90 rotates the map 90 to the left. 180 flips the map.
+     * Defaults is 0.
+     *
+     * @param cameraBearing double number between 0 and 360, interpreted as decimal degrees
+     * @return this builder for chaining options together
+     * @since 1.0.0
+     */
+    public abstract Builder cameraBearing(@Nullable Double cameraBearing);
 
     /**
      * Optionally, pitch tilts the map, producing a perspective effect. Defaults is 0.
      *
-     * @param pitch double number between 0 and 60.
-     * @return Builder
+     * @param cameraPitch double number between 0 and 60
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setPitch(double pitch) {
-      this.pitch = pitch;
-      return this;
-    }
+    public abstract Builder cameraPitch(@FloatRange(from = 0, to = 60)
+                                        @Nullable Double cameraPitch);
 
     /**
-     * If auto is set to true, the viewport will fit the bounds of the overlay. Using this will replace any latitude or
-     * longitude you provide.
+     * If auto is set to true, the viewport will fit the bounds of the overlay. Using this will
+     * replace any latitude or longitude you provide.
      *
-     * @param auto true if you'd like the viewport to be centered to display all map annotations, defaults false.
-     * @return Builder
+     * @param auto true if you'd like the viewport to be centered to display all map annotations,
+     *             defaults false
+     * @return this builder for chaining options together
      * @since 2.1.0
      */
-    public Builder setAuto(boolean auto) {
-      this.auto = auto;
-      return this;
-    }
+    public abstract Builder cameraAuto(Boolean auto);
 
     /**
-     * Determine if auto has been set for the static image camera positioning.
+     * String value for controlling where the overlay is inserted in the style. All overlays will be
+     * inserted before this specified layer.
      *
-     * @return boolean true if auto has been set, otherwise false.
+     * @param beforeLayer s string representing the map layer you'd like to place your overlays
+     *                    below.
+     * @return this builder for chaining options together
      * @since 2.1.0
      */
-    public boolean isAuto() {
-      return auto;
-    }
+    public abstract Builder beforeLayer(@Nullable String beforeLayer);
 
     /**
      * Width of the image.
      *
      * @param width int number between 1 and 1280.
-     * @return Builder
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setWidth(int width) {
-      this.width = width;
-      return this;
-    }
+    public abstract Builder width(@IntRange(from = 1, to = 1280) @Nullable Integer width);
 
     /**
      * Height of the image.
@@ -302,46 +270,42 @@ public class MapboxStaticMap {
      * @return Builder
      * @since 1.0.0
      */
-    public Builder setHeight(int height) {
-      this.height = height;
-      return this;
-    }
+    public abstract Builder height(@IntRange(from = 1, to = 1280) @Nullable Integer height);
 
     /**
-     * Optionally, use to request a retina 2x image that will be returned.
+     * GeoJSON object which represents a specific annotation which will be placed on the static map.
+     * The GeoJSON must be value.
      *
-     * @param retina true if you'd like a retina image.
-     * @return Builder
-     * @since 1.0.0
+     * @param geoJson a formatted string ready to be added to the stiatic map image URL
+     * @return this builder for chaining options together
+     * @since 2.1.0
      */
-    public Builder setRetina(boolean retina) {
-      this.retina = retina;
-      return this;
-    }
+    public abstract Builder geoJson(@Nullable GeoJson geoJson);
+
 
     /**
-     * Optionally, control whether there is attribution on the image. Default is true.
+     * Base package name or other simple string identifier. Used inside the calls user agent header.
      *
-     * @param attribution true places attribution on image.
-     * @return Builder
+     * @param clientAppName base package name or other simple string identifier
+     * @return this builder for chaining options together
      * @since 1.0.0
      */
-    public Builder setAttribution(boolean attribution) {
-      this.attribution = attribution;
-      return this;
-    }
+    public abstract Builder clientAppName(@NonNull String clientAppName);
 
-    /**
-     * Optionally, control whether there is a Mapbox logo on the image. Default is true.
-     *
-     * @param logo true places Mapbox logo on image.
-     * @return Builder
-     * @since 1.0.0
-     */
-    public Builder setLogo(boolean logo) {
-      this.logo = logo;
-      return this;
-    }
+
+
+
+
+    public abstract Builder staticMarkerAnnotations(
+      @Nullable List<StaticMarkerAnnotation> staticMarkerAnnotations);
+
+    public abstract Builder staticPolylineAnnotations(
+      @Nullable List<StaticPolylineAnnotation> staticPolylineAnnotations);
+
+
+    // This field isn't part of the URL
+    private int precision = -1;
+
 
     /**
      * In order to make the returned images better cacheable on the client, you can set the
@@ -356,60 +320,7 @@ public class MapboxStaticMap {
       return this;
     }
 
-    /**
-     * String value for controlling where the overlay is inserted in the style. All overlays will be inserted before
-     * this specified layer.
-     *
-     * @param beforeLayer A string representing the map layer you'd like to place your overlays below.
-     * @return Builder
-     * @since 2.1.0
-     */
-    public Builder setBeforeLayer(String beforeLayer) {
-      this.beforeLayer = beforeLayer;
-      return this;
-    }
 
-    /**
-     * Provides the string being used to represent the layer you wish to place all your overlays below.
-     *
-     * @return a String representing the map styles layer.
-     * @since 2.1.0
-     */
-    public String getBeforeLayer() {
-      return beforeLayer;
-    }
-
-    /**
-     * Get the access token
-     *
-     * @return String with the access token
-     * @since 1.0.0
-     */
-    @Override
-    public String getAccessToken() {
-      return accessToken;
-    }
-
-    /**
-     * Get the username you set within the builder. Typically your own Mapbox username or if you
-     * used a <a href=https://mapbox.com/api-documentation/#styles>defaults</a> Mapbox style, it will be "mapbox".
-     *
-     * @return String with the username.
-     * @since 1.0.0
-     */
-    public String getUsername() {
-      return username;
-    }
-
-    /**
-     * Get what map style your static image will display.
-     *
-     * @return String containing static map id.
-     * @since 1.0.0
-     */
-    public String getStyleId() {
-      return styleId;
-    }
 
     /**
      * Gives location information about the static image including longitude, latitude, zoom,
@@ -494,25 +405,7 @@ public class MapboxStaticMap {
       return TextUtils.join(",", formattedOverlays.toArray());
     }
 
-    /**
-     * Determine if the static image will contain attribution.
-     *
-     * @return true if attribution will be on static image.
-     * @since 1.0.0
-     */
-    public boolean isAttribution() {
-      return attribution;
-    }
 
-    /**
-     * Determine if the static image will contain Mapbox logo.
-     *
-     * @return true if Mapbox logo will be on static image.
-     * @since 1.0.0
-     */
-    public boolean isLogo() {
-      return logo;
-    }
 
     /**
      * @return int number representing the precision for the formatter
@@ -522,30 +415,7 @@ public class MapboxStaticMap {
       return precision;
     }
 
-    public Builder setClientAppName(String appName) {
-      super.clientAppName = appName;
-      return this;
-    }
 
-    /**
-     * Set the base url of the API.
-     *
-     * @param baseUrl base url used as end point
-     * @return the current MapboxBuilder instance
-     * @since 2.0.0
-     */
-    @Override
-    public MapboxBuilder setBaseUrl(String baseUrl) {
-      super.baseUrl = baseUrl;
-      return this;
-    }
-
-    /**
-     * Build the client when all user parameters have been set.
-     *
-     * @return MapboxStaticMap
-     * @since 1.0.0
-     */
     @Override
     public MapboxStaticMap build() throws ServicesException {
       validateAccessToken(accessToken);

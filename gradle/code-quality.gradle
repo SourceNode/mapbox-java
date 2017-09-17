@@ -5,14 +5,18 @@ checkstyle {
   configFile = rootProject.file('config/checkstyle/checkstyle.xml')
   configProperties = [
       'configDir': rootProject.file('config/checkstyle'),
-      'baseDir': rootDir,
+      'baseDir'  : rootDir,
   ]
   toolVersion = pluginVersion.checkstyle
   showViolations = true
 }
 
 pmd {
-//  ruleSets = []
-//  toolVersion = version.pmd
-//  ruleSetConfig = resources.text.fromFile(file("${rootDir}/config/pmd/rulesSets.xml"))
+  ignoreFailures = true
+  sourceSets = [sourceSets.main]
+  reportsDir = file("$project.buildDir/reports/pmd")
+  ruleSets = [
+      "basic",
+      "braces"
+  ]
 }

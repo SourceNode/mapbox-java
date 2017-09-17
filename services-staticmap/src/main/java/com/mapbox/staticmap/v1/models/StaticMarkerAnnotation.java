@@ -1,9 +1,7 @@
-package com.mapbox.services.api.staticimage.v1.models;
+package com.mapbox.staticmap.v1.models;
 
+import com.google.auto.value.AutoValue;
 import com.mapbox.services.Constants;
-import com.mapbox.services.api.ServicesException;
-import com.mapbox.services.commons.models.Position;
-import com.mapbox.services.commons.utils.TextUtils;
 
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -12,13 +10,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Mapbox Static Image API marker overlay. Building this object allows you to place a marker on top or within
- * your static image. The marker can either use the default marker (though you can change it's color and size) or you
- * have the option to also pass in a custom marker icon using it's url.
+ * Mapbox Static Image API marker overlay. Building this object allows you to place a marker on top
+ * or within your static image. The marker can either use the default marker (though you can change
+ * it's color and size) or you have the option to also pass in a custom marker icon using it's url.
  *
  * @since 2.1.0
  */
-public class StaticMarkerAnnotation {
+@AutoValue
+public abstract class StaticMarkerAnnotation {
 
   private String marker;
 
@@ -79,6 +78,7 @@ public class StaticMarkerAnnotation {
    *
    * @since 2.1.0
    */
+  @AutoValue.Builder
   public static class Builder {
 
     private static final String EMPTY = "";
