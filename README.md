@@ -1,4 +1,20 @@
+<h1 align="center">
+  <br>
+  <a href="https://www.mapbox.com/android-docs/mapbox-services/overview/"><img src="https://github.com/mapbox/mapbox-java/blob/mb-java-3.0.0/.github/mbxservice-logo.png" alt="Mapbox Service" width="300"></a>
+</h1>
+
+<h4 align="center">Build powerful Java apps that provide location context using Mapbox's tools and services</h4>
+
+
+
+
+
+
+
 [![](https://raw.githubusercontent.com/mapbox/mapbox-java/master/.github/splash-img.png)](https://www.mapbox.com/android-docs/mapbox-services/)
+
+
+
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.mapbox.mapboxsdk/mapbox-android-services/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.mapbox.mapboxsdk/mapbox-android-services) [![CircleCI](https://circleci.com/gh/mapbox/mapbox-java.svg?style=svg)](https://circleci.com/gh/mapbox/mapbox-java)
 
