@@ -9,14 +9,15 @@ ext {
       retrofit         : '2.3.0',
       okhttp3          : '3.9.0',
       mockito          : '2.7.13',
-      hamcrestJunit    : '2.0.0.0'
+      hamcrestJunit    : '2.0.0.0',
+      errorProne: '2.0.21'
   ]
 
   pluginVersion = [
       checkstyle: '8.2',
       pmd: '5.8.1',
       jacoco: '0.7.9',
-      errorProne: '0.0.10',
+      errorProne: '0.0.11',
       coveralls: '2.8.1',
   ]
 
