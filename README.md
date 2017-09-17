@@ -13,6 +13,8 @@
   <a href="https://circleci.com/gh/mapbox/mapbox-java">
     <img src="https://circleci.com/gh/mapbox/mapbox-java.svg?style=shield&circle-token=:circle-token">
   </a>
+  <a href='https://coveralls.io/github/mapbox/mapbox-java?branch=master'><img src='https://coveralls.io/repos/github/mapbox/mapbox-java/badge.svg?branch=master' alt='Coverage Status' /></a>
+
 </p>
 <br>
 

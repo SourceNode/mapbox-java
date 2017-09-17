@@ -14,7 +14,10 @@ ext {
 
   pluginVersion = [
       checkstyle: '8.2',
-      pmd: '5.8.1'
+      pmd: '5.8.1',
+      jacoco: '0.7.9',
+      errorProne: '0.0.10',
+      coveralls: '2.8.1',
   ]
 
   dependenciesList = [
