@@ -4,7 +4,6 @@ apply plugin: 'jacoco'
 
 buildscript {
   apply from: "${rootDir}/gradle/dependencies.gradle"
-  print "${rootDir}"
 
   repositories {
     maven { url 'https://plugins.gradle.org/m2' }
@@ -14,14 +13,24 @@ buildscript {
   }
 
   dependencies {
+
+    dependencies.create("com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}") {
+      transitive = false
+    }
+
+    //nexus: "com.bmuschko:gradle-nexus-plugin:${pluginVersions.nexus}",
+    classpath pluginDependencies.spotbugs
     classpath 'com.android.tools.build:gradle:2.3.3'
     classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:${pluginVersion.coveralls}"
     classpath "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}"
 
-//    classpath dependencies.create("com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}") {
-//      transitive = false
-//    }
+
   }
+}
+
+task testReport(type: TestReport, group: 'Build') {
+  description = 'Generates an aggregate test report'
+  destinationDir = file("${buildDir}/reports/allTests")
 }
 
 allprojects {
@@ -35,17 +44,14 @@ allprojects {
 
 
 subprojects {
+  apply from: "${rootDir}/gradle/dependencies.gradle"
+  apply from: "${rootDir}/gradle/code-quality.gradle"
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'net.ltgt.errorprone'
 
   sourceCompatibility = "1.7"
   targetCompatibility = "1.7"
-
-
-  apply from: "${rootDir}/gradle/dependencies.gradle"
-  apply from: "${rootDir}/gradle/code-quality.gradle"
-
 
   dependencies {
 
