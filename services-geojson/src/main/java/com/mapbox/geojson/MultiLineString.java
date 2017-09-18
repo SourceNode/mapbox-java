@@ -82,7 +82,14 @@ public abstract class MultiLineString implements Geometry<List<List<Point>>>, Se
     return lineStrings;
   }
 
-
+  /**
+   * This takes the currently defined values found inside this instance and converts it to a GeoJson
+   * string.
+   *
+   * @return a JSON string which represents this MultiLineString geometry
+   * @since 1.0.0
+   */
+  @Override
   public String toJson() {
     GsonBuilder gson = new GsonBuilder();
     gson.registerTypeAdapter(Point.class, new PointSerializer());

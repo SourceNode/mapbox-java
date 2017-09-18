@@ -2,13 +2,7 @@ apply plugin: 'java-library'
 
 dependencies {
 
-  // Gson
-  compile dependenciesList.gson
-
-  // Annotations
-  compileOnly dependenciesList.supportAnnotation
-
-  // Test Dependencies
-  testCompile dependenciesList.junit
+    // Gson
+    compile dependenciesList.gson
 }
 

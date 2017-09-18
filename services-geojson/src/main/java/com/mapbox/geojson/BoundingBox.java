@@ -10,10 +10,10 @@ import com.mapbox.geojson.gson.PointSerializer;
 
 import java.io.Serializable;
 
-import static com.mapbox.services.Constants.MAX_LATITUDE;
-import static com.mapbox.services.Constants.MAX_LONGITUDE;
-import static com.mapbox.services.Constants.MIN_LATITUDE;
-import static com.mapbox.services.Constants.MIN_LONGITUDE;
+import static com.mapbox.services.constants.Constants.MAX_LATITUDE;
+import static com.mapbox.services.constants.Constants.MAX_LONGITUDE;
+import static com.mapbox.services.constants.Constants.MIN_LATITUDE;
+import static com.mapbox.services.constants.Constants.MIN_LONGITUDE;
 
 /**
  * A GeoJson object MAY have a member named "bbox" to include information on the coordinate range

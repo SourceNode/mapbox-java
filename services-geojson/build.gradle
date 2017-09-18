@@ -7,15 +7,10 @@ dependencies {
   // Gson
   compile dependenciesList.gson
 
-// Annotations
+  // Annotations
   compileOnly dependenciesList.supportAnnotation
 
   // AutoValue
   compileOnly dependenciesList.autoValue
   compileOnly dependenciesList.autoValueGson
-
-  // Test Dependencies
-  testCompile dependenciesList.junit
 }
-
-

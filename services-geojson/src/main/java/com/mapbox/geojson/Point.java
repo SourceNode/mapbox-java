@@ -11,10 +11,10 @@ import com.mapbox.geojson.gson.BoundingBoxDeserializer;
 import com.mapbox.geojson.gson.MapboxAdapterFactory;
 import com.mapbox.geojson.gson.PointSerializer;
 
-import static com.mapbox.services.Constants.MAX_LATITUDE;
-import static com.mapbox.services.Constants.MAX_LONGITUDE;
-import static com.mapbox.services.Constants.MIN_LATITUDE;
-import static com.mapbox.services.Constants.MIN_LONGITUDE;
+import static com.mapbox.services.constants.Constants.MAX_LATITUDE;
+import static com.mapbox.services.constants.Constants.MAX_LONGITUDE;
+import static com.mapbox.services.constants.Constants.MIN_LATITUDE;
+import static com.mapbox.services.constants.Constants.MIN_LONGITUDE;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -277,6 +277,7 @@ public abstract class Point implements Geometry, Serializable {
    * @return a JSON string which represents this Point geometry
    * @since 1.0.0
    */
+  @Override
   public String toJson() {
     GsonBuilder gson = new GsonBuilder();
     gson.registerTypeAdapterFactory(MapboxAdapterFactory.create());

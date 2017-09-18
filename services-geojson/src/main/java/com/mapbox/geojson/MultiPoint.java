@@ -130,6 +130,7 @@ public abstract class MultiPoint implements Geometry<List<Point>>, Serializable 
    * @return a JSON string which represents this MultiPoint geometry
    * @since 1.0.0
    */
+  @Override
   public String toJson() {
     GsonBuilder gson = new GsonBuilder();
     gson.registerTypeAdapter(Point.class, new PointSerializer());

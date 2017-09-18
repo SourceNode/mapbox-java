@@ -163,6 +163,7 @@ public abstract class FeatureCollection implements GeoJson {
    * @return a JSON string which represents this Feature Collection
    * @since 1.0.0
    */
+  @Override
   public String toJson() {
     GsonBuilder gson = new GsonBuilder();
     gson.registerTypeAdapter(Point.class, new PointSerializer());

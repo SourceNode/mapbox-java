@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.mapbox.geojson.GeoJson;
 import com.mapbox.geojson.Point;
-import com.mapbox.services.Constants;
+import com.mapbox.services.constants.Constants;
 import com.mapbox.services.exceptions.ServicesException;
 import com.mapbox.services.utils.MapboxUtils;
 import com.mapbox.services.utils.TextUtils;
