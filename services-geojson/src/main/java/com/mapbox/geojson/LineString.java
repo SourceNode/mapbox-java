@@ -13,6 +13,7 @@ import com.mapbox.geojson.gson.BoundingBoxSerializer;
 import com.mapbox.geojson.gson.MapboxAdapterFactory;
 import com.mapbox.geojson.gson.PointDeserializer;
 import com.mapbox.geojson.gson.PointSerializer;
+import com.mapbox.geojson.utils.PolylineUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -162,9 +163,9 @@ public abstract class LineString implements Geometry<List<Point>>, Serializable 
    *   method
    * @since 1.0.0
    */
-//  public static LineString fromPolyline(@NonNull String polyline, int precision) {
-//    return LineString.fromLngLats(PolylineUtils.decode(polyline, precision), null);
-//  }
+  public static LineString fromPolyline(@NonNull String polyline, int precision) {
+    return LineString.fromLngLats(PolylineUtils.decode(polyline, precision), null);
+  }
 
   /**
    * This describes the TYPE of GeoJson geometry this object is, thus this will always return
@@ -226,9 +227,9 @@ public abstract class LineString implements Geometry<List<Point>>, Serializable 
    * @return a string describing the geometry of this LineString
    * @since 1.0.0
    */
-//  public String toPolyline(int precision) {
-//    return PolylineUtils.encode(coordinates(), precision);
-//  }
+  public String toPolyline(int precision) {
+    return PolylineUtils.encode(coordinates(), precision);
+  }
 
   /**
    * Gson TYPE adapter for parsing Gson to this class.

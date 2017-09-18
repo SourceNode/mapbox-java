@@ -55,7 +55,6 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
 
   private Call<DirectionsResponse> call;
   private DirectionsService service;
-  protected Builder builder;
 
   private DirectionsService getService() {
     // No need to recreate it
@@ -217,6 +216,17 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
       .geometries(DirectionsCriteria.GEOMETRY_POLYLINE6);
   }
 
+  private static String formatCoordinates(List<Point> coordinates) {
+    List<String> coordinatesFormatted = new ArrayList<>();
+    for (Point point : coordinates) {
+      coordinatesFormatted.add(String.format(Locale.US, "%s,%s",
+        TextUtils.formatCoordinate(point.longitude()),
+        TextUtils.formatCoordinate(point.latitude())));
+    }
+
+    return TextUtils.join(";", coordinatesFormatted.toArray());
+  }
+
   /**
    * This builder is used to create a new request to the Mapbox Directions API. At a bare minimum,
    * your request must include an access token, an origin, and a destination. All other fields can
@@ -234,12 +244,12 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
   @AutoValue.Builder
   public abstract static class Builder {
 
-    List<Double[]> bearings = new ArrayList<>();
-    List<Point> coordinates = new ArrayList<>();
-    String[] annotations;
-    double[] radiuses;
-    Point destination;
-    Point origin;
+    private List<Double[]> bearings = new ArrayList<>();
+    private List<Point> coordinates = new ArrayList<>();
+    private String[] annotations;
+    private double[] radiuses;
+    private Point destination;
+    private Point origin;
 
     /**
      * The username for the account that the directions engine runs on. In most cases, this should
@@ -538,8 +548,8 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
       }
 
       if (coordinates.size() < 2) {
-        throw new ServicesException("An origin and destination are required before making the" +
-          "directions API request.");
+        throw new ServicesException("An origin and destination are required before making the"
+          + "directions API request.");
       }
 
       coordinates(formatCoordinates(coordinates));
@@ -556,16 +566,4 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
       return directions;
     }
   }
-
-  private static String formatCoordinates(List<Point> coordinates) {
-    List<String> coordinatesFormatted = new ArrayList<>();
-    for (Point point : coordinates) {
-      coordinatesFormatted.add(String.format(Locale.US, "%s,%s",
-        TextUtils.formatCoordinate(point.longitude()),
-        TextUtils.formatCoordinate(point.latitude())));
-    }
-
-    return TextUtils.join(";", coordinatesFormatted.toArray());
-  }
-
 }

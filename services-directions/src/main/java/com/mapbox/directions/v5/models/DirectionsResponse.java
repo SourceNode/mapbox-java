@@ -105,7 +105,7 @@ public abstract class DirectionsResponse implements Serializable {
    * @return a JSON string which represents this Geocoding Response
    * @since 1.0.0
    */
-  public String toJson() {
+  public final String toJson() {
     GsonBuilder gson = new GsonBuilder();
     gson.registerTypeAdapter(Point.class, new PointSerializer());
     gson.registerTypeAdapter(BoundingBox.class, new BoundingBoxSerializer());

@@ -1,15 +1,14 @@
 package com.mapbox.directions.v5;
 
 import com.mapbox.services.constants.Constants;
-
-import java.io.IOException;
-import java.util.Locale;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import java.io.IOException;
+import java.util.Locale;
 
 import static com.mapbox.services.utils.TextUtils.isEmpty;
 
