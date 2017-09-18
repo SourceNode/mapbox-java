@@ -34,7 +34,7 @@ ext {
       okhttp3Mockwebserver: "com.squareup.okhttp3:mockwebserver:${version.okhttp3}",
       mockito             : "org.mockito:mockito-core:${version.mockito}",
       hamcrestJunit       : "org.hamcrest:hamcrest-junit:${version.hamcrestJunit}",
-      errorProne          : "com.google.errorprone:error_prone_core:${version.errorprone}"
+      errorprone          : "com.google.errorprone:error_prone_core:${version.errorprone}"
   ]
 
   pluginDependencies = [

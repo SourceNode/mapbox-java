@@ -3,6 +3,7 @@ apply plugin: 'jacoco'
 
 buildscript {
   apply from: "${rootDir}/gradle/dependencies.gradle"
+  print "${rootDir}"
 
   repositories {
     maven { url 'https://plugins.gradle.org/m2' }
@@ -16,16 +17,22 @@ buildscript {
     classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:${pluginVersion.coveralls}"
     classpath "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}"
 
-    classpath dependencies.create("com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}") {
-      transitive = false
-    }
+//    classpath dependencies.create("com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}") {
+//      transitive = false
+//    }
   }
+}
+
+sourceSets.main.java {
+  srcDir 'generated'
+  exclude '*/AutoValue.java'
 }
 
 
 allprojects {
   apply plugin: 'java'
   apply plugin: 'idea'
+  apply plugin: 'net.ltgt.errorprone'
 
   sourceCompatibility = "1.7"
   targetCompatibility = "1.7"
@@ -39,9 +46,7 @@ allprojects {
     jcenter()
   }
 
-  apply plugin: 'net.ltgt.errorprone'
-
   dependencies {
-    errorprone dependenciesList.errorProne
+    errorprone dependenciesList.errorprone
   }
 }
