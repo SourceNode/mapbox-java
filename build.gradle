@@ -45,3 +45,7 @@ allprojects {
     errorprone dependenciesList.errorProne
   }
 }
+
+configurations.errorprone {
+  resolutionStrategy.force "com.google.errorprone:error_prone_core:${pluginVersion.errorProne}"
+}
