@@ -14,7 +14,7 @@ buildscript {
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.3'
     classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:${pluginVersion.coveralls}"
-    classpath "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorProne}"
+    classpath "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}"
 
     classpath dependencies.create("com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}") {
       transitive = false
@@ -44,8 +44,4 @@ allprojects {
   dependencies {
     errorprone dependenciesList.errorProne
   }
-}
-
-configurations.errorprone {
-  resolutionStrategy.force "com.google.errorprone:error_prone_core:${pluginVersion.errorProne}"
 }
