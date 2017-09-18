@@ -1,4 +1,5 @@
 apply plugin: 'com.github.kt3k.coveralls'
+apply plugin: 'findbugs'
 apply plugin: 'jacoco'
 
 buildscript {
@@ -21,11 +22,6 @@ buildscript {
 //      transitive = false
 //    }
   }
-}
-
-sourceSets.main.java {
-  srcDir 'generated'
-  exclude '*/AutoValue.java'
 }
 
 
