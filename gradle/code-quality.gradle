@@ -1,4 +1,5 @@
 apply plugin: 'com.github.spotbugs'
+apply plugin: 'org.sonarqube'
 apply plugin: "com.github.kt3k.coveralls"
 apply plugin: 'checkstyle'
 apply plugin: 'jacoco'
@@ -8,6 +9,7 @@ apply plugin: 'pmd'
 configurations {
   checkstyleConfig
 }
+
 
 checkstyle {
   configFile = rootProject.file('config/checkstyle/checkstyle.xml')
@@ -27,7 +29,7 @@ spotbugs {
 
 pmd {
   ruleSets = ["basic", "braces"]
-  toolVersion = pluginVersions.pmd
+  toolVersion = pluginVersion.pmd
 }
 
 

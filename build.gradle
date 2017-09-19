@@ -20,6 +20,7 @@ buildscript {
 
     //nexus: "com.bmuschko:gradle-nexus-plugin:${pluginVersions.nexus}",
     classpath pluginDependencies.spotbugs
+    classpath pluginDependencies.sonarqube
     classpath 'com.android.tools.build:gradle:2.3.3'
     classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:${pluginVersion.coveralls}"
     classpath "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}"
@@ -40,13 +41,28 @@ allprojects {
   }
 }
 
-
 subprojects {
   apply from: "${rootDir}/gradle/dependencies.gradle"
   apply from: "${rootDir}/gradle/code-quality.gradle"
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'net.ltgt.errorprone'
+
+
+
+  sonarqube {
+    properties {
+      property "sonar.language", "java"
+      property "sonar.sources", "src/main"
+    }
+  }
+
+  sonarqube {
+    properties {
+      property "sonar.java.binaries", "build/intermediates/classes/debug"
+      property "sonar.jacoco.reportPath","build/outputs/code-coverage/connected/coverage.ec"
+    }
+  }
 
   sourceCompatibility = "1.7"
   targetCompatibility = "1.7"
@@ -60,3 +76,9 @@ subprojects {
     testCompile dependenciesList.hamcrestJunit
   }
 }
+
+task copyTestResources(type: Copy) {
+  from "${projectDir}/src/test/resources"
+  into "${buildDir}/classes/test"
+}
+

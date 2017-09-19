@@ -73,13 +73,6 @@ public abstract class RouteLeg implements Serializable {
   @Nullable
   public abstract LegAnnotation annotation();
 
-  /**
-   * Gson type adapter for parsing Gson to this class.
-   *
-   * @param gson the built {@link Gson} object
-   * @return the type adapter for this class
-   * @since 3.0.0
-   */
   public static TypeAdapter<RouteLeg> typeAdapter(Gson gson) {
     return new AutoValue_RouteLeg.GsonTypeAdapter(gson);
   }

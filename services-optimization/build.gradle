@@ -2,8 +2,15 @@ apply plugin: 'java-library'
 
 dependencies {
 
+  compile project(":services")
   compile project(":services-geojson")
   compile project(":services-directions")
+
+  // Annotations
+  compileOnly dependenciesList.supportAnnotation
+
+  // Gson
+  compile dependenciesList.gson
 
   // Retrofit
   compile dependenciesList.retrofit
@@ -19,4 +26,6 @@ dependencies {
   // Test Dependencies
   testCompile dependenciesList.okhttp3Mockwebserver
 }
+
+
 

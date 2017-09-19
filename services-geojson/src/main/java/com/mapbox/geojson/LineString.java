@@ -89,7 +89,7 @@ public abstract class LineString implements Geometry<List<Point>>, Serializable 
     if (multiPoint.coordinates() == null || multiPoint.coordinates().size() < 2) {
       throw new GeoJsonException("A LineString requires at least 2 coordinates.");
     }
-    return new AutoValue_LineString(TYPE, null, multiPoint.coordinates());
+    return new AutoValue_LineString(null, multiPoint.coordinates());
   }
 
   /**
@@ -107,7 +107,7 @@ public abstract class LineString implements Geometry<List<Point>>, Serializable 
    * @since 3.0.0
    */
   public static LineString fromLngLats(@NonNull List<Point> points) {
-    return new AutoValue_LineString(TYPE, null, points);
+    return new AutoValue_LineString(null, points);
   }
 
   /**
@@ -129,7 +129,7 @@ public abstract class LineString implements Geometry<List<Point>>, Serializable 
     if (points.size() < 2) {
       throw new GeoJsonException("LineString must be made up of 2 or more points.");
     }
-    return new AutoValue_LineString(TYPE, bbox, points);
+    return new AutoValue_LineString(bbox, points);
   }
 
   /**
@@ -146,7 +146,7 @@ public abstract class LineString implements Geometry<List<Point>>, Serializable 
     if (multiPoint.coordinates().size() < 2) {
       throw new GeoJsonException("LineString must be made up of 2 or more points.");
     }
-    return new AutoValue_LineString(TYPE, bbox, multiPoint.coordinates());
+    return new AutoValue_LineString(bbox, multiPoint.coordinates());
   }
 
   /**
@@ -177,7 +177,9 @@ public abstract class LineString implements Geometry<List<Point>>, Serializable 
    */
   @NonNull
   @Override
-  public abstract String type();
+  public String type() {
+    return TYPE;
+  }
 
   /**
    * A Feature Collection might have a member named {@code bbox} to include information on the

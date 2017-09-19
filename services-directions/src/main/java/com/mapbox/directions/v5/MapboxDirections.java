@@ -5,19 +5,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.mapbox.directions.v5.DirectionsCriteria.AnnotationCriteria;
 import com.mapbox.directions.v5.DirectionsCriteria.GeometriesCriteria;
 import com.mapbox.directions.v5.DirectionsCriteria.OverviewCriteria;
 import com.mapbox.directions.v5.DirectionsCriteria.ProfileCriteria;
+import com.mapbox.directions.v5.models.DirectionsAdapterFactory;
 import com.mapbox.directions.v5.models.DirectionsResponse;
-import com.mapbox.geojson.BoundingBox;
-import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.Point;
-import com.mapbox.geojson.gson.BoundingBoxDeserializer;
-import com.mapbox.geojson.gson.GeometryDeserializer;
-import com.mapbox.geojson.gson.MapboxAdapterFactory;
-import com.mapbox.geojson.gson.PointDeserializer;
 import com.mapbox.services.constants.Constants;
 import com.mapbox.services.exceptions.ServicesException;
 import com.mapbox.services.utils.MapboxUtils;
@@ -28,11 +24,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.mapbox.services.utils.TextUtils.isEmpty;
 
 /**
  * The Directions API allows the calculation of routes between coordinates. The fastest route can be
@@ -51,10 +50,24 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * @since 1.0.0
  */
 @AutoValue
-public abstract class MapboxDirections extends MapboxService<DirectionsResponse> {
+public abstract class MapboxDirections {
 
+  private okhttp3.Call.Factory callFactory;
   private Call<DirectionsResponse> call;
   private DirectionsService service;
+  private OkHttpClient okHttpClient;
+  private boolean enableDebug;
+  private Gson gson;
+
+  protected Gson getGson() {
+    // Gson instance with type adapters
+    if (gson == null) {
+      gson = new GsonBuilder()
+        .registerTypeAdapterFactory(DirectionsAdapterFactory.create())
+        .create();
+    }
+    return gson;
+  }
 
   private DirectionsService getService() {
     // No need to recreate it
@@ -65,12 +78,7 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
     // Retrofit instance
     Retrofit.Builder retrofitBuilder = new Retrofit.Builder()
       .baseUrl(baseUrl())
-      .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
-        .registerTypeAdapterFactory(MapboxAdapterFactory.create())
-        .registerTypeAdapter(Point.class, new PointDeserializer())
-        .registerTypeAdapter(Geometry.class, new GeometryDeserializer())
-        .registerTypeAdapter(BoundingBox.class, new BoundingBoxDeserializer())
-        .create()));
+      .addConverterFactory(GsonConverterFactory.create(getGson()));
     if (getCallFactory() != null) {
       retrofitBuilder.callFactory(getCallFactory());
     } else {
@@ -116,7 +124,6 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
    * @throws IOException Signals that an I/O exception of some sort has occurred
    * @since 1.0.0
    */
-  @Override
   public Response<DirectionsResponse> executeCall() throws IOException {
     return getCall().execute();
   }
@@ -129,7 +136,6 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
    *                 created.
    * @since 1.0.0
    */
-  @Override
   public void enqueueCall(Callback<DirectionsResponse> callback) {
     getCall().enqueue(callback);
   }
@@ -140,7 +146,6 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
    *
    * @since 1.0.0
    */
-  @Override
   public void cancelCall() {
     getCall().cancel();
   }
@@ -151,7 +156,6 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
    * @return cloned call
    * @since 1.0.0
    */
-  @Override
   public Call<DirectionsResponse> cloneCall() {
     return getCall().clone();
   }
@@ -202,6 +206,26 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
   abstract String clientAppName();
 
   /**
+   * Gets the call factory for creating {@link Call} instances.
+   *
+   * @return the call factory, or the default OkHttp client if it's null.
+   * @since 2.0.0
+   */
+  public okhttp3.Call.Factory getCallFactory() {
+    return callFactory;
+  }
+
+  /**
+   * Specify a custom call factory for creating {@link Call} instances.
+   *
+   * @param callFactory implementation
+   * @since 2.0.0
+   */
+  public void setCallFactory(okhttp3.Call.Factory callFactory) {
+    this.callFactory = callFactory;
+  }
+
+  /**
    * Build a new {@link MapboxDirections} object with the initial values set for
    * {@link #baseUrl()}, {@link #profile()}, {@link #user()}, and {@link #geometries()}.
    *
@@ -225,6 +249,54 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
     }
 
     return TextUtils.join(";", coordinatesFormatted.toArray());
+  }
+
+  /**
+   * Used Internally.
+   *
+   * @return OkHttpClient
+   * @since 1.0.0
+   */
+  public OkHttpClient getOkHttpClient() {
+    if (okHttpClient == null) {
+//      if (isEnableDebug()) {
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+//        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+//        httpClient.addInterceptor(logging);
+//        okHttpClient = httpClient.build();
+//      } else {
+        okHttpClient = new OkHttpClient();
+//      }
+    }
+
+    return okHttpClient;
+  }
+
+  /**
+   * Computes a full user agent header of the form: MapboxJava/1.2.0 Mac OS X/10.11.5 (x86_64)
+   *
+   * @param clientAppName Application Name
+   * @return {@link String}
+   * @since 1.0.0
+   */
+  public static String getHeaderUserAgent(String clientAppName) {
+    try {
+      String osName = System.getProperty("os.name");
+      String osVersion = System.getProperty("os.version");
+      String osArch = System.getProperty("os.arch");
+
+      if (isEmpty(osName) || isEmpty(osVersion) || isEmpty(osArch)) {
+        return Constants.HEADER_USER_AGENT;
+      } else {
+        String baseUa = String.format(
+          Locale.US, "%s %s/%s (%s)", Constants.HEADER_USER_AGENT, osName, osVersion, osArch);
+        return isEmpty(clientAppName) ? baseUa : String.format(Locale.US, "%s %s", clientAppName, baseUa);
+      }
+
+    } catch (Exception exception) {
+      return Constants.HEADER_USER_AGENT;
+    }
   }
 
   /**

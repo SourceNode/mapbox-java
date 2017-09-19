@@ -38,7 +38,7 @@ public abstract class MultiPolygon implements Geometry<List<List<List<Point>>>>,
     for (Polygon polygon : polygons) {
       coordinates.add(polygon.coordinates());
     }
-    return new AutoValue_MultiPolygon(TYPE, null, coordinates);
+    return new AutoValue_MultiPolygon(null, coordinates);
   }
 
   public static MultiPolygon fromPolygons(@NonNull List<Polygon> polygons,
@@ -47,17 +47,17 @@ public abstract class MultiPolygon implements Geometry<List<List<List<Point>>>>,
     for (Polygon polygon : polygons) {
       coordinates.add(polygon.coordinates());
     }
-    return new AutoValue_MultiPolygon(TYPE, bbox, coordinates);
+    return new AutoValue_MultiPolygon(bbox, coordinates);
   }
 
   public static MultiPolygon fromLngLats(@NonNull List<List<List<Point>>> coordinates) {
-    return new AutoValue_MultiPolygon(TYPE, null, coordinates);
+    return new AutoValue_MultiPolygon(null, coordinates);
   }
 
   public static MultiPolygon fromLngLats(@NonNull List<List<List<Point>>> coordinates,
                                          @Nullable BoundingBox bbox) {
 
-    return new AutoValue_MultiPolygon(TYPE, bbox, coordinates);
+    return new AutoValue_MultiPolygon(bbox, coordinates);
   }
 
   public List<Polygon> polygons() {
@@ -70,7 +70,9 @@ public abstract class MultiPolygon implements Geometry<List<List<List<Point>>>>,
 
   @NonNull
   @Override
-  public abstract String type();
+  public String type() {
+    return TYPE;
+  }
 
   /**
    * A Feature Collection might have a member named {@code bbox} to include information on the

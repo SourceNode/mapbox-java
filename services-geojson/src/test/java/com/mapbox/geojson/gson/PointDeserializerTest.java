@@ -1,8 +1,6 @@
 package com.mapbox.geojson.gson;
 
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.Point;
 import com.mapbox.services.BaseTest;
 

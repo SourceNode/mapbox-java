@@ -1,5 +1,7 @@
 package com.mapbox.services;
 
+import com.google.gson.JsonParser;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -9,15 +11,17 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Scanner;
 
+import static org.junit.Assert.assertEquals;
+
 public class BaseTest {
 
   public static final double DELTA = 1E-10;
   public static final String ACCESS_TOKEN = "pk.XXX";
 
-//  public void compareJson(String json1, String json2) {
-//    JsonParser parser = new JsonParser();
-//    assertEquals(parser.parse(json1), parser.parse(json2));
-//  }
+  public void compareJson(String json1, String json2) {
+    JsonParser parser = new JsonParser();
+    assertEquals(parser.parse(json1), parser.parse(json2));
+  }
 
   protected String loadJsonFixture(String filename) throws IOException {
     ClassLoader classLoader = getClass().getClassLoader();

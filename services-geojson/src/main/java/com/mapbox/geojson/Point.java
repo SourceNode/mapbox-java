@@ -95,7 +95,7 @@ public abstract class Point implements Geometry, Serializable {
     List<Double> coordinates = new ArrayList<>();
     coordinates.add(longitude);
     coordinates.add(latitude);
-    return new AutoValue_Point(TYPE, null, coordinates);
+    return new AutoValue_Point(null, coordinates);
   }
 
   /**
@@ -120,7 +120,7 @@ public abstract class Point implements Geometry, Serializable {
     List<Double> coordinates = new ArrayList<>();
     coordinates.add(longitude);
     coordinates.add(latitude);
-    return new AutoValue_Point(TYPE, bbox, coordinates);
+    return new AutoValue_Point(bbox, coordinates);
   }
 
   /**
@@ -147,7 +147,7 @@ public abstract class Point implements Geometry, Serializable {
     coordinates.add(longitude);
     coordinates.add(latitude);
     coordinates.add(altitude);
-    return new AutoValue_Point(TYPE, null, coordinates);
+    return new AutoValue_Point(null, coordinates);
   }
 
   /**
@@ -175,7 +175,7 @@ public abstract class Point implements Geometry, Serializable {
     coordinates.add(longitude);
     coordinates.add(latitude);
     coordinates.add(altitude);
-    return new AutoValue_Point(TYPE, bbox, coordinates);
+    return new AutoValue_Point(bbox, coordinates);
   }
 
   /**
@@ -242,7 +242,9 @@ public abstract class Point implements Geometry, Serializable {
    */
   @NonNull
   @Override
-  public abstract String type();
+  public String type() {
+    return TYPE;
+  }
 
   /**
    * A Feature Collection might have a member named {@code bbox} to include information on the
