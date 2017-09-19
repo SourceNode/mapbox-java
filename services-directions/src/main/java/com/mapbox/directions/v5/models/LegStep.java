@@ -162,6 +162,13 @@ public abstract class LegStep implements Serializable {
   @Nullable
   public abstract String exits();
 
+  /**
+   * Gson type adapter for parsing Gson to this class.
+   *
+   * @param gson the built {@link Gson} object
+   * @return the type adapter for this class
+   * @since 3.0.0
+   */
   public static TypeAdapter<LegStep> typeAdapter(Gson gson) {
     return new AutoValue_LegStep.GsonTypeAdapter(gson);
   }

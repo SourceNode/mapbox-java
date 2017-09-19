@@ -1,5 +1,7 @@
 package com.mapbox.directions.v5;
 
+import static com.mapbox.services.utils.TextUtils.isEmpty;
+
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,8 +32,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
-import static com.mapbox.services.utils.TextUtils.isEmpty;
 
 /**
  * The Directions API allows the calculation of routes between coordinates. The fastest route can be
@@ -110,7 +110,8 @@ public abstract class MapboxDirections {
       bearings(),
       continueStraight(),
       annotations(),
-      language());
+      language(),
+      roundaboutExits());
 
     // Done
     return call;
@@ -203,6 +204,9 @@ public abstract class MapboxDirections {
   abstract String language();
 
   @Nullable
+  abstract Boolean roundaboutExits();
+
+  @Nullable
   abstract String clientAppName();
 
   /**
@@ -266,7 +270,7 @@ public abstract class MapboxDirections {
 //        httpClient.addInterceptor(logging);
 //        okHttpClient = httpClient.build();
 //      } else {
-        okHttpClient = new OkHttpClient();
+      okHttpClient = new OkHttpClient();
 //      }
     }
 
@@ -481,6 +485,16 @@ public abstract class MapboxDirections {
     }
 
     abstract Builder language(@Nullable String language);
+
+    /**
+     * Optionally, set this to true if you want to enable instructions while exiting roundabouts
+     * and rotaries.
+     *
+     * @param roundaboutExits true if you'd like extra roundabout instructions
+     * @return this builder for chaining options together
+     * @since 3.0.0
+     */
+    abstract Builder roundaboutExits(@Nullable Boolean roundaboutExits);
 
     /**
      * Whether or not to return additional metadata along the route. Possible values are:

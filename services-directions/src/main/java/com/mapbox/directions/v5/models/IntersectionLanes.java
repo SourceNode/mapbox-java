@@ -49,6 +49,13 @@ public abstract class IntersectionLanes implements Serializable {
   @Nullable
   public abstract List<String> indications();
 
+  /**
+   * Gson type adapter for parsing Gson to this class.
+   *
+   * @param gson the built {@link Gson} object
+   * @return the type adapter for this class
+   * @since 3.0.0
+   */
   public static TypeAdapter<IntersectionLanes> typeAdapter(Gson gson) {
     return new AutoValue_IntersectionLanes.GsonTypeAdapter(gson);
   }
