@@ -48,12 +48,10 @@ subprojects {
   apply plugin: 'idea'
   apply plugin: 'net.ltgt.errorprone'
 
-
-
-  sonarqube {
-    properties {
-      property "sonar.language", "java"
-      property "sonar.sources", "src/main"
+  // Fixes issue with test resources not being found inside Intellij
+  idea {
+    module {
+      testOutputDir = file('build/resources/test')
     }
   }
 

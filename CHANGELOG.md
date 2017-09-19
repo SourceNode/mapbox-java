@@ -2,6 +2,13 @@
 
 Mapbox welcomes participation and contributions from everyone.
 
+### v3.0.0
+
+- Model and GeoJSON classes made immutable using AutoValue.
+- Directions API UUID added inside the `DirectionsResponse` model.
+- Position object removed in favor of GeoJSON `Point` for coordinate representation.
+
+
 ### v2.2.3
 
 - Introduce setDebugLoggingEnabled API [#549](https://github.com/mapbox/mapbox-java/pull/549)

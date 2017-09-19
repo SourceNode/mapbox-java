@@ -347,7 +347,7 @@ public class MapboxDirectionsTest extends BaseTest {
     client.setCallFactory(null);
     Response<DirectionsResponse> response = client.executeCall();
     assertEquals(response.code(), 200);
-    assertEquals(response.body().code(), "ok");
+    assertEquals(response.body().code(), "Ok");
   }
 
 
