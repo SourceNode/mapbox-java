@@ -581,7 +581,8 @@ public abstract class MapboxDirections {
       return this;
     }
 
-    abstract Builder radiuses(@Nullable String radiuses);
+    @SuppressWarnings("WeakerAccess")
+    protected abstract Builder radiuses(@Nullable String radiuses);
 
     /**
      * Base package name or other simple string identifier. Used inside the calls user agent header.
