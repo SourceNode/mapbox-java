@@ -44,10 +44,11 @@ jacocoTestReport {
   }
 }
 
+println(project.version)
+println(project.name)
+
 sonarqube {
   properties {
-//    property "sonar.projectVersion"
-//    property "sonar.projectKey", "mapbox-java:services"
     property "sonar.java.coveragePlugin", "jacoco"
     property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/test.exec"
     property "sonar.links.homepage", "https://github.com/mapbox/mapbox-java"

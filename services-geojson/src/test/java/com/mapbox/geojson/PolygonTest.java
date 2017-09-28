@@ -127,8 +127,8 @@ public class PolygonTest extends BaseTest {
     final String json = loadJsonFixture(SAMPLE_POLYGON);
     Polygon geo = Polygon.fromJson(json);
     assertEquals("Polygon", geo.type());
-    assertEquals(geo.coordinates().get(0).get(0).longitude(), 100.0, DELTA);
-    assertEquals(geo.coordinates().get(0).get(0).latitude(), 0.0, DELTA);
+    assertEquals(100.0, geo.coordinates().get(0).get(0).longitude(), DELTA);
+    assertEquals(0.0, geo.coordinates().get(0).get(0).latitude(), DELTA);
     assertFalse(geo.coordinates().get(0).get(0).hasAltitude());
   }
 

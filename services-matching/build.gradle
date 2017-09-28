@@ -2,7 +2,6 @@ apply plugin: 'java-library'
 
 dependencies {
 
-  compile project(":services")
   compile project(":services-geojson")
   compile project(":services-directions")
 
@@ -10,7 +9,8 @@ dependencies {
   compile dependenciesList.retrofit
   compile dependenciesList.retrofit2Gson
 
-  compile dependenciesList.supportAnnotation
+  // Annotations
+  compileOnly dependenciesList.supportAnnotation
 
   // OkHttp
   compile dependenciesList.okhttp3Logging

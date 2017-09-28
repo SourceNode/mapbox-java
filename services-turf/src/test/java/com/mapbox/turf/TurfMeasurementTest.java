@@ -19,6 +19,7 @@ import com.mapbox.geojson.Point;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.services.BaseTest;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -101,10 +102,8 @@ public class TurfMeasurementTest extends BaseTest {
     Feature route2 = Feature.fromJson(loadJsonFixture(LINE_DISTANCE_ROUTE_TWO));
     assertEquals(356762, Math.round(TurfMeasurement.lineDistance((LineString) route1.geometry(),
       UNIT_MILES)));
-    assertTrue((TurfMeasurement.lineDistance((LineString) route2.geometry(),
-      UNIT_KILOMETERS) - 742) < 1
-      && (TurfMeasurement.lineDistance((LineString) route2.geometry(),
-      UNIT_KILOMETERS) - 742) > (-1));
+    Assert.assertEquals(1344705.4251058456,
+      TurfMeasurement.lineDistance((LineString) route2.geometry(), UNIT_KILOMETERS), DELTA);
   }
 
   @Test

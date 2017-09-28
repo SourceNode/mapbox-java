@@ -347,8 +347,8 @@ public class MapboxDirectionsTest extends BaseTest {
     // (the default OkHttp client is used)
     client.setCallFactory(null);
     Response<DirectionsResponse> response = client.executeCall();
-    assertEquals(response.code(), 200);
-    assertEquals(response.body().code(), "Ok");
+    assertEquals(200, response.code());
+    assertEquals("Ok", response.body().code());
   }
 
 

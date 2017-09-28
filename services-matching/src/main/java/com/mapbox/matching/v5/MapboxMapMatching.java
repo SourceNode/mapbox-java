@@ -59,6 +59,7 @@ public abstract class MapboxMapMatching extends MapboxService<MapMatchingRespons
       .baseUrl(baseUrl())
       .addConverterFactory(GsonConverterFactory.create(new GsonBuilder()
         .registerTypeAdapterFactory(DirectionsAdapterFactory.create())
+//        .registerTypeAdapterFactory(MatchingAdapterFactory.create())
         .create()));
     if (getCallFactory() != null) {
       retrofitBuilder.callFactory(getCallFactory());
