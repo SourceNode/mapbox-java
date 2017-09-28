@@ -5,6 +5,9 @@ dependencies {
   compile project(":services-geojson")
   compile project(":services-directions")
 
+  // Annotations
+  compileOnly dependenciesList.supportAnnotation
+
   // Retrofit
   compile dependenciesList.retrofit
   compile dependenciesList.retrofit2Gson
@@ -18,9 +21,5 @@ dependencies {
 
   // Test Dependencies
   testCompile dependenciesList.okhttp3Mockwebserver
+  testCompile project(path: ':services', configuration: 'testOutput')
 }
-
-sonarqube {
-  skipProject = true
-}
-

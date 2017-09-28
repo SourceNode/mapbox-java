@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -21,6 +22,8 @@ import com.mapbox.geojson.gson.PointDeserializer;
 import com.mapbox.geojson.gson.PointSerializer;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,7 +59,7 @@ import java.util.List;
  * @since 1.0.0
  */
 @AutoValue
-public abstract class Point implements Geometry, Serializable {
+public abstract class Point implements Geometry<List<Double>>, Serializable {
 
   @Expose
   @SerializedName("type")
@@ -122,7 +125,7 @@ public abstract class Point implements Geometry, Serializable {
   public static Point fromLngLat(
     @FloatRange(from = MIN_LONGITUDE, to = MAX_LONGITUDE) double longitude,
     @FloatRange(from = MIN_LATITUDE, to = MAX_LATITUDE) double latitude,
-    @NonNull BoundingBox bbox) {
+    @Nullable BoundingBox bbox) {
     List<Double> coordinates = new ArrayList<>();
     coordinates.add(longitude);
     coordinates.add(latitude);

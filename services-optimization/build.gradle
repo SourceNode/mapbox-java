@@ -2,6 +2,7 @@ apply plugin: 'java-library'
 
 dependencies {
 
+  compile project(":services")
   compile project(":services-geojson")
   compile project(":services-directions")
 
@@ -24,11 +25,5 @@ dependencies {
 
   // Test Dependencies
   testCompile dependenciesList.okhttp3Mockwebserver
-}
-
-
-
-
-sonarqube {
-  skipProject = true
+  testCompile project(path: ':services', configuration: 'testOutput')
 }

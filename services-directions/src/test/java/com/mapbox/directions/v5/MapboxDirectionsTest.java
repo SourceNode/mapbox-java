@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import com.mapbox.directions.v5.models.DirectionsResponse;
 import com.mapbox.geojson.Point;
+import com.mapbox.services.BaseTest;
 import com.mapbox.services.exceptions.ServicesException;
 
 import org.junit.After;

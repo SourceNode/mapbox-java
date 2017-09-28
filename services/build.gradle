@@ -2,7 +2,14 @@ apply plugin: 'java-library'
 
 dependencies {
 
-    // Gson
-    compile dependenciesList.gson
+  // Gson
+  compile dependenciesList.gson
 }
 
+configurations {
+  testOutput
+}
+
+dependencies {
+  testOutput sourceSets.test.output
+}

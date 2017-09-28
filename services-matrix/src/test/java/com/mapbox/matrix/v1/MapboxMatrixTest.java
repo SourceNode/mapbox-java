@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 import com.mapbox.directions.v5.DirectionsCriteria;
 import com.mapbox.geojson.Point;
 import com.mapbox.matrix.v1.models.MatrixResponse;
+import com.mapbox.services.BaseTest;
 import com.mapbox.services.exceptions.ServicesException;
 
 import org.junit.After;

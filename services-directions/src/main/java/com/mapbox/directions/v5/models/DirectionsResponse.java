@@ -5,17 +5,7 @@ import android.support.annotation.Nullable;
 
 import com.google.auto.value.AutoValue;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
-import com.mapbox.geojson.BoundingBox;
-import com.mapbox.geojson.Geometry;
-import com.mapbox.geojson.Point;
-import com.mapbox.geojson.gson.BoundingBoxDeserializer;
-import com.mapbox.geojson.gson.BoundingBoxSerializer;
-import com.mapbox.geojson.gson.GeometryDeserializer;
-import com.mapbox.geojson.gson.MapboxAdapterFactory;
-import com.mapbox.geojson.gson.PointDeserializer;
-import com.mapbox.geojson.gson.PointSerializer;
 
 import java.io.Serializable;
 import java.util.List;
