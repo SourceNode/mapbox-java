@@ -4,9 +4,7 @@ public class Voice {
 
   private String announcement;
   private String ssmlAnnouncement;
-  private double[] announceAt;
-  private double bearing;
-  private double announceDistance;
+  private double distanceAlongGeometry;
 
   public String getAnnouncement() {
     return announcement;
@@ -24,27 +22,11 @@ public class Voice {
     this.ssmlAnnouncement = ssmlAnnouncement;
   }
 
-  public double[] getAnnounceAt() {
-    return announceAt;
+  public double getDistanceAlongGeometry() {
+    return distanceAlongGeometry;
   }
 
-  public void setAnnounceAt(double[] announceAt) {
-    this.announceAt = announceAt;
-  }
-
-  public double getBearing() {
-    return bearing;
-  }
-
-  public void setBearing(double bearing) {
-    this.bearing = bearing;
-  }
-
-  public double getAnnounceDistance() {
-    return announceDistance;
-  }
-
-  public void setAnnounceDistance(double announceDistance) {
-    this.announceDistance = announceDistance;
+  public void setDistanceAlongGeometry(double distanceAlongGeometry) {
+    this.distanceAlongGeometry = distanceAlongGeometry;
   }
 }
