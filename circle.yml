@@ -24,8 +24,8 @@ jobs:
           command: |
            echo y | $ANDROID_HOME/tools/bin/sdkmanager "build-tools;26.0.1"
       - run:
-          name: Coveralls
-          command: ./gradlew coveralls
+          name: Jacoco test report
+          command: ./gradlew jacocoTestReport
       - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
