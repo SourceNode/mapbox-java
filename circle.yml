@@ -34,7 +34,7 @@ jobs:
           name: Jacoco test report
           command: ./gradlew jacocoTestReport
       - run:
-          name: Run unit-test in for all modules
+          name: Run unit-test for all modules
           command: make test
       - run:
           name: Update Transifex
@@ -82,10 +82,7 @@ jobs:
             signing.secretKeyRingFile=../../secring.gpg" >> mapbox/gradle.properties
       - run:
           name: Build Java libraries
-          command: make build-release-java
-      - run:
-          name: Build Android libraries
-          command: make build-release-android
+          command: make build-release
       - deploy:
           name: Publish Java Services To Maven Central
           command: |

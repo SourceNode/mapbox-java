@@ -20,6 +20,17 @@ test:
     ./gradlew :services-staticmap:test ; \
     ./gradlew :services-turf:test
 
+build-release:
+    ./gradlew :services:assemble ; \
+    ./gradlew :services-directions:assemble ; \
+    ./gradlew :services-geocoding:assemble ; \
+    ./gradlew :services-geojson:assemble ; \
+    ./gradlew :services-matching:assemble ; \
+    ./gradlew :services-matrix:assemble ; \
+    ./gradlew :services-optimization:assemble ; \
+    ./gradlew :services-staticmap:assemble ; \
+    ./gradlew :services-turf:assemble
+
 publish:
     export IS_LOCAL_DEVELOPMENT=false; ./gradlew :services:uploadArchives ; \
     export IS_LOCAL_DEVELOPMENT=false; ./gradlew :services-directions:uploadArchives ; \
