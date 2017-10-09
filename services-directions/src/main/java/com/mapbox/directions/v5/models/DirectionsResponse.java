@@ -82,6 +82,8 @@ public abstract class DirectionsResponse implements Serializable {
   @Nullable
   public abstract String uuid();
 
+  public abstract Builder toBuilder();
+
   /**
    * Gson type adapter for parsing Gson to this class.
    *

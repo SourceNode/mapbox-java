@@ -11,6 +11,8 @@ import com.mapbox.directions.v5.DirectionsCriteria.GeometriesCriteria;
 import com.mapbox.directions.v5.DirectionsCriteria.OverviewCriteria;
 import com.mapbox.directions.v5.DirectionsCriteria.ProfileCriteria;
 import com.mapbox.directions.v5.models.DirectionsResponse;
+import com.mapbox.directions.v5.models.DirectionsRoute;
+import com.mapbox.directions.v5.models.RouteOptions;
 import com.mapbox.geojson.Point;
 import com.mapbox.services.MapboxService;
 import com.mapbox.services.constants.Constants;
@@ -42,9 +44,9 @@ import static com.mapbox.services.utils.ApiCallHelper.getHeaderUserAgent;
  * origin.
  *
  * @see <a href="https://www.mapbox.com/android-docs/mapbox-services/overview/directions/">Android
- * Directions documentation</a>
+ *   Directions documentation</a>
  * @see <a href="https://www.mapbox.com/api-documentation/#directions">Directions API
- * documentation</a>
+ *   documentation</a>
  * @since 1.0.0
  */
 @AutoValue
@@ -127,8 +129,34 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
    * @since 1.0.0
    */
   @Override
-  public void enqueueCall(Callback<DirectionsResponse> callback) {
-    getCall().enqueue(callback);
+  public void enqueueCall(final Callback<DirectionsResponse> callback) {
+    getCall().enqueue(new DirectionsApiCallback<DirectionsResponse>() {
+      @Override
+      public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
+        super.onResponse(call, response);
+        List<DirectionsRoute> routes = new ArrayList<>();
+        for (DirectionsRoute route : response.body().routes()) {
+          routes.add(route.toBuilder().routeOptions(
+            RouteOptions.builder()
+              .profile(profile())
+              .continueStraight(continueStraight())
+              .annotations(annotations())
+              .bearings(bearings())
+              .alternatives(alternatives())
+              .language(language())
+              .radiuses(radiuses())
+              .user(user())
+              .build()
+          ).build());
+        }
+        DirectionsResponse newResponse = response.body().toBuilder().routes(routes).build();
+        callback.onResponse(call, Response.success(newResponse));
+      }
+    });
+
+//    getCall().enqueue(callback);
+
+
   }
 
   /**
@@ -238,16 +266,14 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
       .geometries(DirectionsCriteria.GEOMETRY_POLYLINE6);
   }
 
-  private static String formatCoordinates(List<Point> coordinates) {
-    List<String> coordinatesFormatted = new ArrayList<>();
-    for (Point point : coordinates) {
-      coordinatesFormatted.add(String.format(Locale.US, "%s,%s",
-        TextUtils.formatCoordinate(point.longitude()),
-        TextUtils.formatCoordinate(point.latitude())));
-    }
-
-    return TextUtils.join(";", coordinatesFormatted.toArray());
-  }
+  /**
+   * Returns the builder which created this instance of {@link MapboxDirections} and allows for
+   * modification and building a new directions request with new information.
+   *
+   * @return {@link MapboxDirections.Builder} with the same variables set as this directions object
+   * @since 3.0.0
+   */
+  public abstract Builder toBuilder();
 
   /**
    * This builder is used to create a new request to the Mapbox Directions API. At a bare minimum,
@@ -420,7 +446,7 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
      *                 written in when returned
      * @return this builder for chaining options together
      * @see <a href="https://www.mapbox.com/api-documentation/#instructions-languages">Supported
-     * Languages</a>
+     *   Languages</a>
      * @since 2.2.0
      */
     public Builder language(@Nullable Locale language) {
@@ -455,7 +481,7 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
      *                    or null which will result in no annotations being used
      * @return this builder for chaining options together
      * @see <a href="https://www.mapbox.com/api-documentation/#routeleg-object">RouteLeg object
-     * documentation</a>
+     *   documentation</a>
      * @since 2.1.0
      */
     public Builder annotations(@Nullable @AnnotationCriteria String... annotations) {
@@ -597,6 +623,17 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
           + " token.");
       }
       return directions;
+    }
+
+    private static String formatCoordinates(List<Point> coordinates) {
+      List<String> coordinatesFormatted = new ArrayList<>();
+      for (Point point : coordinates) {
+        coordinatesFormatted.add(String.format(Locale.US, "%s,%s",
+          TextUtils.formatCoordinate(point.longitude()),
+          TextUtils.formatCoordinate(point.latitude())));
+      }
+
+      return TextUtils.join(";", coordinatesFormatted.toArray());
     }
   }
 }

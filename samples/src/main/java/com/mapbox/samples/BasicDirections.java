@@ -21,6 +21,9 @@ public class BasicDirections {
       @Override
       public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
         System.out.println(response.body().routes().get(0).distance());
+        System.out.println(response.body().routes().get(0).routeOptions().profile());
+        System.out.println(response.body().routes().get(0).routeOptions().alternatives());
+        System.out.println(response.body().routes().get(0).routeOptions().user());
       }
 
       @Override
