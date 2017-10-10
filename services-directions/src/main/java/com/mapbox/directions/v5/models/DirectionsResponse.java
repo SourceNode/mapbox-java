@@ -82,6 +82,15 @@ public abstract class DirectionsResponse implements Serializable {
   @Nullable
   public abstract String uuid();
 
+  /**
+   * Convert the current {@link DirectionsResponse} to its builder holding the currently assigned
+   * values. This allows you to modify a single variable and then rebuild the project resulting in
+   * an updated and modifier {@link DirectionsResponse}.
+   *
+   * @return a {@link DirectionsResponse.Builder} with the same values set to match the ones defined
+   *   in this {@link DirectionsResponse}
+   * @since 3.0.0
+   */
   public abstract Builder toBuilder();
 
   /**

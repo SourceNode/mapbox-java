@@ -1,9 +1,10 @@
 package com.mapbox.directions.v5;
 
+import static com.mapbox.services.utils.ApiCallHelper.getHeaderUserAgent;
+
 import android.support.annotation.FloatRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import com.google.auto.value.AutoValue;
 import com.google.gson.GsonBuilder;
 import com.mapbox.directions.v5.DirectionsCriteria.AnnotationCriteria;
@@ -19,19 +20,16 @@ import com.mapbox.services.constants.Constants;
 import com.mapbox.services.exceptions.ServicesException;
 import com.mapbox.services.utils.MapboxUtils;
 import com.mapbox.services.utils.TextUtils;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-import static com.mapbox.services.utils.ApiCallHelper.getHeaderUserAgent;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * The Directions API allows the calculation of routes between coordinates. The fastest route can be
@@ -117,7 +115,13 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
    */
   @Override
   public Response<DirectionsResponse> executeCall() throws IOException {
-    return getCall().execute();
+    Response<DirectionsResponse> response = getCall().execute();
+    if (response.body() == null || response.body().routes().isEmpty()) {
+      return response;
+    }
+    List<DirectionsRoute> routes = response.body().routes();
+    return Response.success(response.body().toBuilder().routes(
+      generateRouteOptions(routes)).build());
   }
 
   /**
@@ -134,29 +138,34 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
       @Override
       public void onResponse(Call<DirectionsResponse> call, Response<DirectionsResponse> response) {
         super.onResponse(call, response);
-        List<DirectionsRoute> routes = new ArrayList<>();
-        for (DirectionsRoute route : response.body().routes()) {
-          routes.add(route.toBuilder().routeOptions(
-            RouteOptions.builder()
-              .profile(profile())
-              .continueStraight(continueStraight())
-              .annotations(annotations())
-              .bearings(bearings())
-              .alternatives(alternatives())
-              .language(language())
-              .radiuses(radiuses())
-              .user(user())
-              .build()
-          ).build());
+        if (response == null || response.body().routes().isEmpty()) {
+          // If null just pass the original object back since there's nothing to modify.
+          callback.onResponse(call, response);
         }
-        DirectionsResponse newResponse = response.body().toBuilder().routes(routes).build();
+        DirectionsResponse newResponse = response.body().toBuilder().routes(
+          generateRouteOptions(response.body().routes())).build();
         callback.onResponse(call, Response.success(newResponse));
       }
     });
+  }
 
-//    getCall().enqueue(callback);
-
-
+  private List<DirectionsRoute> generateRouteOptions(List<DirectionsRoute> routes) {
+    List<DirectionsRoute> modifiedRoutes = new ArrayList<>();
+    for (DirectionsRoute route : routes) {
+      modifiedRoutes.add(route.toBuilder().routeOptions(
+        RouteOptions.builder()
+          .profile(profile())
+          .continueStraight(continueStraight())
+          .annotations(annotations())
+          .bearings(bearings())
+          .alternatives(alternatives())
+          .language(language())
+          .radiuses(radiuses())
+          .user(user())
+          .build()
+      ).build());
+    }
+    return modifiedRoutes;
   }
 
   /**

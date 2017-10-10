@@ -95,6 +95,15 @@ public abstract class DirectionsRoute implements Serializable {
   @Nullable
   public abstract RouteOptions routeOptions();
 
+  /**
+   * Convert the current {@link DirectionsRoute} to its builder holding the currently assigned
+   * values. This allows you to modify a single variable and then rebuild the project resulting in
+   * an updated and modifier {@link DirectionsRoute}.
+   *
+   * @return a {@link DirectionsRoute.Builder} with the same values set to match the ones defined
+   *   in this {@link DirectionsRoute}
+   * @since 3.0.0
+   */
   public abstract Builder toBuilder();
 
   /**

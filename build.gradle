@@ -9,6 +9,11 @@ buildscript {
   }
 
   dependencies {
+
+    dependencies.create("com.puppycrawl.tools:checkstyle:${pluginVersion.checkstyle}") {
+      transitive = false
+    }
+
     classpath "net.ltgt.gradle:gradle-errorprone-plugin:${pluginVersion.errorprone}"
     classpath "gradle.plugin.de.fuerstenau:BuildConfigPlugin:${pluginVersion.buildConfigPlugin}"
     classpath 'com.android.tools.build:gradle:2.3.3'
