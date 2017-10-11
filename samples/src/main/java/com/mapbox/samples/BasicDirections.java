@@ -1,6 +1,5 @@
 package com.mapbox.samples;
 
-
 import com.mapbox.directions.v5.MapboxDirections;
 import com.mapbox.directions.v5.models.DirectionsResponse;
 import com.mapbox.geojson.Point;

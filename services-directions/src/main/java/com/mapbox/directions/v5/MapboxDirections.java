@@ -475,7 +475,7 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
      * @return this builder for chaining options together
      * @since 3.0.0
      */
-    abstract Builder roundaboutExits(@Nullable Boolean roundaboutExits);
+    public abstract Builder roundaboutExits(@Nullable Boolean roundaboutExits);
 
     /**
      * Whether or not to return additional metadata along the route. Possible values are:

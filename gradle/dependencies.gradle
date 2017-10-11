@@ -4,7 +4,7 @@ ext {
             autoValue        : '1.4.1',
             autoValueGson    : '0.4.5',
             junit            : '4.12',
-            supportLibVersion: '26.0.2',
+            supportLibVersion: '26.1.0',
             gson             : '2.8.0',
             retrofit         : '2.2.0',
             okhttp3          : '3.9.0',
