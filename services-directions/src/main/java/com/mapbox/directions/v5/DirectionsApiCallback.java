@@ -4,8 +4,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.io.IOException;
-
 /**
  * A wrapper class for the RetroFit callback which is used to add the direction request information
  * {@link com.mapbox.directions.v5.models.RouteOptions} object inside
@@ -18,11 +16,7 @@ abstract class DirectionsApiCallback<T> implements Callback<T> {
   @Override
   public void onResponse(Call<T> call, Response<T> response) {
     if (response.body() == null) {
-      try {
-        onFailure(call, new Throwable(response.errorBody().string()));
-      } catch (IOException ioException) {
-        ioException.printStackTrace();
-      }
+      onFailure(call, new Throwable("Response body is null"));
     }
   }
 

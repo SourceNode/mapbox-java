@@ -604,7 +604,7 @@ public abstract class MapboxDirections extends MapboxService<DirectionsResponse>
      * values are valid, formats the values as strings for easier consumption by the API, and lastly
      * creates a new {@link MapboxDirections} object with the values provided.
      *
-     * @return a new instance of Mapbox Optimization
+     * @return a new instance of Mapbox Directions
      * @since 2.1.0
      */
     public MapboxDirections build() {
