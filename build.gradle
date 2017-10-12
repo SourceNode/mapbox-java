@@ -28,7 +28,7 @@ allprojects {
     jcenter()
   }
   group = GROUP
-//  version = VERSION_NAME
+  version = VERSION_NAME
 }
 
 subprojects {
